@@ -1,0 +1,1002 @@
+/* ROOT VARIABLES */
+:root {
+  --primary: #e74c3c;
+  --primary-dark: #c0392b;
+  --bg-light: #E0F8E0;
+  --sidebar-bg: #2c3e50;
+}
+/* Style untuk Logo */
+.logo-img {
+    width: 80px;          /* Atur lebar logo sesuai keinginan */
+    height: auto;         /* Menjaga proporsi gambar */
+    margin-bottom: 10px;  /* Jarak antara logo dan tulisan Mitra Farma */
+    border-radius: 50%;   /* Buat bulat jika logonya berbentuk lingkaran */
+    display: block;       /* Agar margin auto bekerja */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.sidebar .brand h2 {
+    font-size: 1.2rem;
+    margin-top: 5px;
+    color: #ffffff;
+}
+body {
+  margin: 0;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  display: flex;
+  background: var(--bg-light);
+}
+
+/* SIDEBAR MODERN */
+.sidebar {
+  width: 240px;
+  background: var(--sidebar-bg);
+  color: white;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .brand {
+  text-align: center;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.sidebar a, .sidebar .dropbtn {
+  padding: 12px;
+  color: #bdc3c7;
+  text-decoration: none;
+  display: block;
+  transition: 0.3s;
+  border-radius: 8px;
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.sidebar a:hover, .sidebar .dropbtn:hover {
+  background: rgba(255,255,255,0.1);
+  color: white;
+}
+
+/* DROPDOWN */
+.dropdown-content {
+  display: none;
+  background: rgba(0,0,0,0.2);
+  padding-left: 15px;
+  border-radius: 8px;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* CONTENT AREA */
+.content {
+  margin-left: 280px;
+  padding: 40px;
+  width: 100%;
+}
+
+/* =========================================
+   HERO SECTION (TAMPILAN ATAS) MODERN & MENARIK
+   ========================================= */
+.hero {
+    /* 1. MENGGANTI WARNA SOLID DENGAN GRADASI HALUS (Pink ke Merah) */
+    background: linear-gradient(135deg, #f78da7 0%, #e74c3c 100%);
+    
+    /* 2. MENAMBAHKAN POLA LATAR BELAKANG HALUS (Contoh: Pola Pill/Obat) */
+    /* Pastikan link gambar pola valid, atau gunakan pola CSS-only */
+    background-image: 
+        linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 100%), /* Gradasi overlay */
+        url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MCIgaGVpZ2h0PSI0MCIgdmlld0JveD0iMCAwIDQwIDQwIj48ZyBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiNmZmZmZmYiIGZpbGwtb3BhY2l0eT0iMC4wNSI+PHBhdGggZD0iTTAgMGg0MHY0MEgwVjB6bTIwIDIwaDIwdjIwSDIwVjIwek0wIDIwaDIwdjIwSDBWMjB6bTIwIDBIMHYyMGgyMFYyMHoiLz48L2c+PC9nPjwvc3ZnPg=='); /* Pola kotak halus */
+    
+    background-size: cover, 40px 40px; /* Ukuran pola */
+    background-repeat: repeat; /* Pola berulang */
+    background-attachment: fixed; /* Latar belakang diam saat scroll (efek parallax) */
+
+    /* 3. MENAMBAHKAN SUDUT MEMBULAT (Seperti di Screenshot kamu) */
+    border-radius: 20px;
+    
+    /* 4. PENYESUAIAN KONTEN DI DALAMNYA */
+    color: white;
+    padding: 80px 40px; /* Jarak atas-bawah dan kiri-kanan */
+    text-align: center;
+    margin-bottom: 40px; /* Jarak ke konten bawah */
+    
+    /* 5. EFEK BAYANGAN AGAR TERLIHAT MENGAMBANG */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    
+    /* Memicu Animasi Masuk (Dari CSS sebelumnya jika ada) */
+    opacity: 0;
+    animation: masukDanBerhenti 1.2s ease forwards;
+}
+
+/* Penyesuaian untuk Teks Utama di Layar Desktop */
+.hero h1.main-title {
+    font-size: 3.5rem; /* Ukuran diperbesar */
+    margin-bottom: 10px;
+    text-shadow: 2px 4px 10px rgba(0, 0, 0, 0.3); /* Bayangan teks lebih tegas */
+}
+
+/* Penyesuaian untuk Sub-judul */
+.hero p {
+    font-size: 1.2rem;
+    font-weight: 300;
+    margin-bottom: 30px;
+    opacity: 0.9;
+}
+
+.section-title {
+  border-left: 5px solid var(--primary);
+  padding-left: 15px;
+  margin: 30px 0 20px;
+  color: var(--primary-dark);
+}
+
+/* CARD & GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+  text-align: center;
+  transition: 0.3s;
+  position: relative;
+}
+
+.card:hover { transform: translateY(-5px); }
+
+.card img { width: 100%; border-radius: 10px; margin-bottom: 15px; }
+
+.price { color: var(--primary); font-weight: 800; font-size: 1.2rem; }
+
+.promo-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: gold;
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 5px;
+  font-weight: bold;
+}
+
+/* BUTTONS */
+.btn-buy {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  width: 100%;
+}
+
+.btn-checkout {
+  background: #27ae60;
+  color: white;
+  border: none;
+  padding: 15px;
+  width: 100%;
+  border-radius: 10px;
+  margin-top: auto;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* FLOAT WA */
+.wa-float {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: #25D366;
+  color: white;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  cursor: pointer;
+  z-index: 999;
+}
+/* Floating Cart Button */
+#floating-cart {
+    position: fixed;
+    bottom: 100px; /* Di atas tombol WA */
+    right: 30px;
+    background: var(--primary);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    z-index: 1000;
+    transition: 0.3s;
+}
+
+#cart-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    background: #f1c40f;
+    color: #2c3e50;
+    font-size: 14px;
+    font-weight: bold;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid white;
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 10001;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 400px;
+    border-radius: 20px;
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    background: var(--primary);
+    color: white;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.close-modal { cursor: pointer; font-size: 24px; }
+
+#daftar-item-keranjang {
+    max-height: 300px;
+    overflow-y: auto;
+    padding: 20px;
+}
+
+.cart-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+    font-weight: 600;
+}
+
+.modal-footer {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.btn-lanjut {
+    background: #eee;
+    border: none;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.btn-checkout-final {
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 10px;
+    font-weight: bold;
+    cursor: pointer;
+}
+/* =========================================
+   ANIMASI & EFEK VISUAL (Biar Gak Kaku)
+   ========================================= */
+
+/* 1. Efek Fade-In Mendatar untuk Konten Utama saat Dimuat */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.content section {
+    animation: fadeInUp 0.6s ease-out both;
+}
+
+/* Mengatur delay agar section muncul bergantian (staggered) */
+.content section:nth-child(1) { animation-delay: 0.1s; } /* Hero */
+.content section:nth-child(2) { animation-delay: 0.2s; } /* Promo */
+.content section:nth-child(3) { animation-delay: 0.3s; } /* Kecantikan */
+.content section:nth-child(4) { animation-delay: 0.4s; } /* Anak */
+/* ... dan seterusnya jika perlu */
+
+/* 2. Efek Hover Halus pada Kartu Produk (Zoom & Bayangan) */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-8px) scale(1.02); /* Sedikit terangkat dan membesar */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.1); /* Bayangan lebih lembut dan menyebar */
+    background-color: #fff; /* Memastikan background tetap putih bersih */
+}
+
+/* Efek Zoom pada Gambar di dalam Kartu saat Hover */
+.card img {
+    transition: transform 0.5s ease;
+}
+
+.card:hover img {
+    transform: scale(1.05); /* Gambar sedikit membesar di dalam bingkai */
+}
+
+/* 3. Efek Pulse (Berdenyut) pada Tombol WA Melayang */
+@keyframes pulseWA {
+    0% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 15px rgba(37, 211, 102, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(37, 211, 102, 0);
+    }
+}
+
+.wa-float {
+    animation: pulseWA 2s infinite; /* Berdenyut terus menerus */
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.wa-float:hover {
+    transform: scale(1.1) rotate(5deg); /* Membesar dan sedikit miring saat didekati */
+    background-color: #20b358; /* Warna hijau sedikit gelap */
+}
+
+/* 4. Efek Hover pada Tombol Beli & Keranjang (Warna & Geser Ikon) */
+.btn-buy, .btn-cart {
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-buy:hover, .btn-cart:hover {
+    background-color: var(--primary-dark); /* Menggunakan warna merah gelap dari root */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 10px rgba(231, 76, 60, 0.3);
+}
+
+.btn-cart i {
+    transition: transform 0.3s ease;
+}
+
+.btn-cart:hover i {
+    transform: translateX(3px); /* Ikon keranjang sedikit bergeser ke kanan */
+}
+
+/* 5. Efek Hover pada Menu Sidebar (Slide In Background) */
+.sidebar a, .sidebar .dropbtn {
+    position: relative;
+    overflow: hidden;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.sidebar a::after, .sidebar .dropbtn::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255,255,255,0.1);
+    transform: translateX(-100%); /* Tersembunyi di kiri */
+    transition: transform 0.3s ease;
+    z-index: -1;
+}
+
+.sidebar a:hover::after, .sidebar .dropbtn:hover::after {
+    transform: translateX(0); /* Geser masuk saat hover */
+}
+
+.sidebar a:hover {
+    color: white;
+}
+
+/* 6. Animasi Halus untuk Munculnya Modal Pop-up */
+@keyframes modalSlideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.modal-content {
+    animation: modalSlideDown 0.4s ease-out both;
+}
+
+/* 7. Efek Berdenyut Pelan pada Badge Promo (Gratis Ongkir) */
+@keyframes badgePulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.promo-badge-custom {
+    animation: badgePulse 1.5s infinite ease-in-out;
+}
+/* =========================================
+   ANIMASI BERGERAK TERUS-MENERUS (Live Effects)
+   ========================================= */
+
+/* 1. Efek Mengetik untuk Teks Hero (APOTEK MITRA FARMA) */
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: white; }
+}
+
+/* MEMPERBESAR NAMA APOTEK DI HERO SECTION */
+/* Tampilan Judul Utama */
+.hero h1.main-title {
+    font-size: 4rem; /* Ukuran besar */
+    font-weight: 800;
+    color: #ffffff;
+    text-transform: uppercase;
+    text-align: center;
+    margin-bottom: 15px;
+    text-shadow: 3px 6px 15px rgba(0, 0, 0, 0.4);
+    
+    /* Memicu Animasi */
+    display: block;
+    opacity: 0; /* Mulai dari tidak terlihat */
+    animation: masukDanBerhenti 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+
+/* Animasi Masuk dan Berhenti di Tengah */
+@keyframes masukDanBerhenti {
+    0% {
+        opacity: 0;
+        transform: scale(0.5); /* Mulai dari kecil */
+        letter-spacing: -10px; /* Huruf rapat */
+    }
+    70% {
+        opacity: 1;
+        transform: scale(1.1); /* Sedikit membesar (efek pop) */
+        letter-spacing: 5px;
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1); /* Berhenti di ukuran normal */
+        letter-spacing: 2px; /* Jarak huruf ideal */
+    }
+}
+
+/* Penyesuaian untuk HP */
+@media (max-width: 768px) {
+    .hero h1.main-title {
+        font-size: 2.2rem;
+        letter-spacing: 1px;
+    }
+}
+
+/* Penyesuaian untuk tampilan HP (Mobile) agar tidak kebesaran */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem; /* Ukuran kembali mengecil di layar HP supaya tidak berantakan */
+    }
+}
+
+/* 2. Efek Goyang Pelan (Wiggle) untuk Gambar Promo */
+@keyframes wiggle {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(1deg); }
+    50% { transform: rotate(0deg); }
+    75% { transform: rotate(-1deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.promo-card img {
+    animation: wiggle 3s ease-in-out infinite; /* Goyang pelan terus menerus */
+    transform-origin: center bottom; /* Poros goyangan di bawah */
+}
+
+/* 3. Efek Berdenyut (Pulse) untuk Ikon di Tombol */
+@keyframes pulseIcon {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.btn-buy i, .btn-cart i, .sidebar a i {
+    animation: pulseIcon 2s infinite ease-in-out; /* Ikon berdenyut pelan */
+    display: inline-block; /* Memastikan transformasi bekerja */
+    margin-right: 8px; /* Jarak ikon ke teks */
+}
+
+/* 4. Efek Melayang (Floating) untuk Tombol WA & Keranjang */
+@keyframes floating {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); } /* Naik 10px */
+    100% { transform: translateY(0px); }
+}
+
+.wa-float, #floating-cart {
+    animation: floating 3s ease-in-out infinite; /* Melayang naik turun terus */
+}
+
+/* Tambahan: Pastikan bayangan tombol melayang tetap bagus saat bergerak */
+.wa-float {
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+#floating-cart {
+    box-shadow: 0 10px 20px rgba(231, 76, 60, 0.3);
+}
+
+/* 5. Efek Bersinar (Shine) untuk Badge Promo (Gratis Ongkir) */
+@keyframes shine {
+    100% { left: 125%; }
+}
+
+.promo-badge-custom {
+    position: absolute;
+    overflow: hidden; /* Penting untuk efek shine */
+}
+
+.promo-badge-custom::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -75%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 100%);
+    transform: skewX(-25deg);
+    animation: shine 1.5s infinite; /* Efek bersinar lewat terus */
+}
+/* Container untuk Gambar & Teks Konsultasi */
+.konsultasi-wrapper {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.konsultasi-wrapper:hover {
+    transform: scale(1.05); /* Sedikit membesar saat disentuh */
+}
+
+/* Mengatur Ukuran Gambar Apoteker */
+.img-apoteker {
+    width: 150px; /* Atur ukuran lebar sesuai selera */
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%; /* Membuat gambar jadi bulat */
+    border: 4px solid white;
+    box-shadow: 0 8px 15px rgba(0,0,0,0.2);
+    margin-bottom: 10px;
+}
+
+/* Mengatur Tulisan di Bawah Gambar */
+.text-konsultasi {
+    background: white;
+    color: var(--primary); /* Menggunakan warna merah apotek */
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    margin: 0;
+}
+
+/* Penyesuaian Mobile */
+@media (max-width: 768px) {
+    .img-apoteker {
+        width: 120px;
+        height: 120px;
+    }
+    .text-konsultasi {
+        font-size: 0.8rem;
+    }
+}
+/* Container Edukasi */
+.edukasi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.video-card {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s;
+}
+
+.video-card:hover {
+    transform: translateY(-5px);
+}
+
+.video-card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--sidebar-bg);
+}
+
+/* Biar video gak gepeng (Responsive 16:9) */
+.video-responsive {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+    overflow: hidden;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.video-responsive iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.btn-tanya {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 30px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-tanya:hover {
+    background: #c0392b;
+    box-shadow: 0 5px 15px rgba(231, 76, 60, 0.4);
+}
+/* CONTAINER EDUKASI */
+.edukasi-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    padding: 10px;
+}
+
+/* KARTU EDUKASI */
+.edukasi-card {
+    background: white;
+    border-radius: 20px;
+    padding: 25px;
+    display: flex;
+    gap: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    border: 1px solid #eee;
+    position: relative;
+    overflow: hidden;
+}
+
+.edukasi-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--primary);
+    box-shadow: 0 15px 40px rgba(231, 76, 60, 0.15);
+}
+
+/* IKON EDUKASI */
+.edukasi-icon {
+    font-size: 2.5rem;
+    color: var(--primary);
+    opacity: 0.8;
+}
+
+/* KONTEN TEKS */
+.edukasi-content h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+}
+
+.edukasi-content p {
+    font-size: 0.95rem;
+    color: #7f8c8d;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+/* TOMBOL LANJUTKAN */
+.btn-read-more {
+    display: inline-block;
+    color: var(--primary);
+    text-decoration: none;
+    font-weight: 800;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.btn-read-more i {
+    font-size: 0.8rem;
+    margin-left: 5px;
+}
+
+.btn-read-more:hover {
+    color: var(--primary-dark);
+    letter-spacing: 0.5px; /* Efek bergerak sedikit saat di-hover */
+}
+
+/* ANIMASI HALUS SAAT MUNCUL */
+.edukasi-card {
+    animation: fadeInUp 0.8s ease backwards;
+}
+#konten-tentang {
+    color: #333 !important;
+    padding: 20px;
+}
+#tentang p {
+    color: #333 !important;
+}
+### 2. Update `style.css`
+Hapus bagian `.sidebar` dan `.content` yang lama, lalu tambahkan kode CSS responsif ini:
+
+```css
+/* NAVBAR MODERN STYLES */
+.navbar {
+    background: var(--sidebar-bg);
+    color: white;
+    position: fixed;
+    top: 0; width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.nav-brand { display: flex; align-items: center; gap: 10px; font-weight: 800; }
+.nav-logo { width: 40px; height: 40px; border-radius: 50%; }
+
+.nav-menu { display: flex; list-style: none; gap: 5px; margin: 0; padding: 0; }
+.nav-menu a {
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: block;
+    font-size: 0.9rem;
+    transition: 0.3s;
+}
+.nav-menu a:hover { color: white; background: rgba(255,255,255,0.1); border-radius: 8px; }
+
+/* DROPDOWN NAVBAR */
+.nav-dropdown { position: relative; }
+.dropdown-items {
+    display: none;
+    position: absolute;
+    background: #34495e;
+    min-width: 160px;
+    list-style: none;
+    padding: 10px 0;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+.nav-dropdown:hover .dropdown-items { display: block; }
+.dropdown-items a { padding: 10px 20px; }
+
+/* ADJUST CONTENT FOR TOP NAVBAR */
+.content-wrapper { margin-top: 70px; padding: 15px; }
+
+/* MOBILE RESPONSIVE (CHROME ANDROID) */
+@media (max-width: 768px) {
+    .menu-toggle { display: block; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+    
+    .nav-menu {
+        display: none; /* Hidden by default on mobile */
+        flex-direction: column;
+        position: absolute;
+        top: 60px; left: 0; width: 100%;
+        background: var(--sidebar-bg);
+        padding: 20px;
+    }
+    .nav-menu.active { display: flex; }
+    
+    .nav-dropdown .dropdown-items { position: static; background: rgba(0,0,0,0.2); width: 100%; }
+    
+    /* Grid Produk di HP jadi 2 Kolom agar lebih rapi */
+    .grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    
+    .hero { padding: 40px 20px; border-radius: 0 0 20px 20px; }
+    .hero h1.main-title { font-size: 2rem; }
+    
+    .card { padding: 10px; }
+    .card h3 { font-size: 0.9rem; height: 40px; overflow: hidden; }
+}
+
+@media (min-width: 769px) {
+    .menu-toggle { display: none; }
+}
+3. Tambahkan Fungsi di script.js
+Tambahkan fungsi berikut di bagian paling bawah file script.js Anda untuk mengaktifkan menu buka-tutup di HP:
+
+JavaScript
+
+// Fungsi untuk buka tutup menu di tampilan mobile
+function toggleMenu() {
+    const navMenu = document.getElementById('navMenu');
+    if (window.innerWidth <= 768) {
+        navMenu.classList.toggle('active');
+    }
+}
+
+// Menutup menu jika user mengklik di luar menu saat terbuka (Opsional)
+window.onclick = function(event) {
+    if (!event.target.matches('.menu-toggle') && !event.target.closest('.nav-menu')) {
+        const navMenu = document.getElementById('navMenu');
+        if (navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+        }
+    }
+}
+/* Pastikan container navbar menggunakan align-items center */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Menjaga logo dan menu tetap sejajar tengah secara vertikal */
+    padding: 10px 20px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+/* Pastikan list menu sejajar */
+.nav-menu {
+    display: flex;
+    list-style: none;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+    align-items: center; /* KUNCI UTAMA: Agar semua li sejajar di tengah */
+}
+
+/* Atur agar link di dalam li memiliki tinggi yang sama */
+.nav-menu > li > a {
+    color: #bdc3c7;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex; /* Menggunakan flex agar ikon dan teks sejajar */
+    align-items: center;
+    gap: 8px; /* Jarak antara ikon dan teks */
+    font-size: 0.9rem;
+    transition: 0.3s;
+    line-height: 1; /* Menghindari tinggi baris yang berlebihan */
+}
+
+/* Khusus untuk dropdown agar panah kecilnya tidak merusak posisi */
+.nav-dropdown > a i.fa-chevron-down {
+    font-size: 0.7rem;
+    margin-left: 5px;
+}
+/* Menghilangkan bullet point dan membuat list menjadi horizontal */
+.nav-menu {
+    display: flex;         /* Membuat menu berjejer ke samping */
+    list-style: none;      /* Menghilangkan titik-titik menu */
+    margin: 0;
+    padding: 0;
+    
+    /* INI KUNCI AGAR MENU DI TENAH */
+    justify-content: center; 
+    align-items: center;   /* Agar teks sejajar tinggi rata tengah */
+    flex-grow: 1;          /* Mengambil sisa ruang agar bisa ke tengah */
+    gap: 15px;             /* Jarak antar menu */
+}
+
+/* Supaya tulisan menu rapi */
+.nav-menu li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.nav-container {
+    display: flex;
+    align-items: center; /* Logo, Menu, dan Tombol sejajar tengah semua */
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.card-profil {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+.card-profil h3 {
+    color: var(--sidebar-bg);
+    margin-bottom: 10px;
+}
+
+.edukasi-singkat {
+    background: #f9f9f9;
+    padding: 15px;
+    border-left: 5px solid var(--primary);
+    margin-top: 20px;
+}
+.video-container iframe {
+    border-radius: 15px;
+}
+
+@media (max-width: 768px) {
+    .video-container {
+        padding: 0 10px;
+    }
+}
