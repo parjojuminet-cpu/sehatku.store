@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 /* ============================================================
    TYPES
    ============================================================ */
-const WA_NUM = "62882006236471";
+const WA_NUM = "62882006729762";
 
 interface Product {
   id: string;
@@ -612,7 +612,7 @@ export default function App() {
         <div className="bg-gradient-to-r from-emerald-700 to-teal-600 px-4 py-2 text-center text-xs font-semibold text-white tracking-wide flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto md:px-8">
           <div className="flex items-center gap-1.5 justify-center md:justify-start">
             <Phone size={13} />
-            <span>0882-0062-36471</span>
+            <span>0882-0067-29762</span>
             <span className="hidden md:inline">|</span>
             <MapPin size={13} className="hidden md:inline" />
             <span className="hidden md:inline">Jawa Tengah</span>
@@ -626,7 +626,7 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-3.5 flex items-center justify-between gap-4">
           {/* Logo */}
           <div className="flex items-center gap-2 cursor-pointer" onClick={() => scrollToSection("home")}>
-            <img src="mitra.png" alt="Sehatku Logo" className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shadow-md shadow-emerald-500/10" />
+            <img src="/mitra.png" alt="Sehatku Logo" className="w-11 h-11 rounded-full object-cover border-2 border-emerald-500 shadow-md shadow-emerald-500/10" />
             <div>
               <span className="font-display font-extrabold text-xl text-emerald-700 tracking-tight leading-none block">SEHATKU</span>
               <span className="text-[10px] text-teal-600 font-bold uppercase tracking-wider block">STORE APOTEK</span>
@@ -1201,7 +1201,7 @@ export default function App() {
                 {p.isBest && <span className="absolute top-2.5 left-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black text-[9px] px-2 py-0.5 rounded-md uppercase tracking-wider z-10 shadow-md">Best</span>}
                 {p.isPromo && <span className="absolute top-2.5 left-2.5 bg-gradient-to-r from-rose-500 to-red-600 text-white font-black text-[9px] px-2 py-0.5 rounded-md uppercase tracking-wider z-10 shadow-md">Promo</span>}
                 <div className="bg-gray-50/70 p-4 aspect-square flex items-center justify-center overflow-hidden">
-                  <img src={p.img} alt={p.name} onError={handleProductImageError} className="max-h-36 object-contain group-hover:scale-105 transition-transform duration-300" />
+                  <img src={p.img} alt={p.name} onError={handleProductImageError} loading="lazy" decoding="async" className="max-h-36 object-contain group-hover:scale-105 transition-transform duration-300" />
                 </div>
               </div>
               <div className="p-4 flex-1 flex flex-col justify-between">
@@ -1277,7 +1277,7 @@ export default function App() {
               className="bg-white border border-gray-100 rounded-2xl p-4 w-44 shrink-0 flex flex-col justify-between cursor-pointer hover:border-emerald-300 hover:shadow-md transition-all"
             >
               <div className="bg-gray-50/50 rounded-xl p-2 aspect-square flex items-center justify-center overflow-hidden mb-3">
-                <img src={p.img} alt={p.name} onError={handleProductImageError} className="max-h-24 object-contain" />
+                <img src={p.img} alt={p.name} onError={handleProductImageError} loading="lazy" decoding="async" className="max-h-24 object-contain" />
               </div>
               <div>
                 <span className="bg-red-50 text-red-600 text-[9px] font-black py-0.5 px-2 rounded-md uppercase tracking-wider block w-max mb-1">PROMO</span>
@@ -1309,7 +1309,7 @@ export default function App() {
                     <video src={g.src} className="w-full h-full object-cover opacity-80" muted playsInline />
                   </div>
                 ) : (
-                  <img src={g.src} alt={g.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent p-5 flex flex-col justify-end opacity-0 group-hover:opacity-100 transition-opacity">
                   <h4 className="font-bold text-sm text-white">{g.title}</h4>
@@ -1570,7 +1570,7 @@ export default function App() {
                 <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0"><Phone size={20} /></div>
                 <div>
                   <h5 className="font-bold text-sm text-gray-800">WhatsApp Resmi</h5>
-                  <p className="text-xs text-gray-500 leading-normal mt-0.5">0882-0062-36471</p>
+                  <p className="text-xs text-gray-500 leading-normal mt-0.5">0882-0067-29762</p>
                 </div>
               </div>
               <div className="flex gap-4">
