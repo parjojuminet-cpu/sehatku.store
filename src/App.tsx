@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 /* ============================================================
    TYPES
    ============================================================ */
-const WA_NUM = "6285731070315";
+const WA_NUM = "62882006236471";
 
 interface Product {
   id: string;
@@ -612,7 +612,7 @@ export default function App() {
         <div className="bg-gradient-to-r from-emerald-700 to-teal-600 px-4 py-2 text-center text-xs font-semibold text-white tracking-wide flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto md:px-8">
           <div className="flex items-center gap-1.5 justify-center md:justify-start">
             <Phone size={13} />
-            <span>0857-3107-0315</span>
+            <span>0882-0062-36471</span>
             <span className="hidden md:inline">|</span>
             <MapPin size={13} className="hidden md:inline" />
             <span className="hidden md:inline">Jawa Tengah</span>
@@ -1570,7 +1570,7 @@ export default function App() {
                 <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0"><Phone size={20} /></div>
                 <div>
                   <h5 className="font-bold text-sm text-gray-800">WhatsApp Resmi</h5>
-                  <p className="text-xs text-gray-500 leading-normal mt-0.5">0857-3107-0315</p>
+                  <p className="text-xs text-gray-500 leading-normal mt-0.5">0882-0062-36471</p>
                 </div>
               </div>
               <div className="flex gap-4">
