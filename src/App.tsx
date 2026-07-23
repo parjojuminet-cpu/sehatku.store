@@ -9,7 +9,7 @@ import { motion, AnimatePresence } from "motion/react";
 /* ============================================================
    TYPES
    ============================================================ */
-const WA_NUM = "62882006729762";
+const WA_NUM = "62882006236471";
 
 interface Product {
   id: string;
@@ -39,21 +39,6 @@ interface Article {
   btnLabel: string;
 }
 
-/* ============================================================
-   SIMULATED ORDERS (Social Proof CRO)
-   ============================================================ */
-const SIMULATED_ORDERS = [
-  { name: "Siti Rahma", loc: "Ungaran Barat", item: "Benzolac 2,5%", time: "1 menit yang lalu" },
-  { name: "Dewi Setyowati", loc: "Bawen, Semarang", item: "Blackmores Bio C", time: "3 menit yang lalu" },
-  { name: "Pak Slamet", loc: "Ambarawa", item: "Kloderma Gel", time: "5 menit yang lalu" },
-  { name: "Rina Kartika", loc: "Salatiga", item: "Tolak Angin 1 Box", time: "Baru saja" },
-  { name: "Andi Saputra", loc: "Gunungpati", item: "Promag Herbal", time: "8 menit yang lalu" },
-  { name: "Ibu Megawati", loc: "Banyumanik", item: "Bodrexin Anak", time: "4 menit yang lalu" },
-  { name: "Hendra Wijaya", loc: "Tembalang", item: "Mediklin Sol", time: "6 menit yang lalu" },
-  { name: "Sri Lestari", loc: "Boyolali", item: "Vitacid Cream", time: "2 menit yang lalu" },
-  { name: "dr. Anwar", loc: "Ungaran Timur", item: "Actifed Merah", time: "9 menit yang lalu" },
-  { name: "Yanto K.", loc: "Genuk, Semarang", item: "Koolfever Anak", time: "10 menit yang lalu" }
-];
 
 /* ============================================================
    MAIN COMPONENT
@@ -66,10 +51,6 @@ export default function App() {
 
   // FAQ Accordion State
   const [openFaq, setOpenFaq] = useState<number | null>(null);
-
-  // Social Proof CRO Notifications State
-  const [recentOrder, setRecentOrder] = useState<any>(null);
-  const [showOrderNotif, setShowOrderNotif] = useState<boolean>(false);
 
   // Search & Autocomplete
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -170,7 +151,7 @@ export default function App() {
   ];
 
   const GALLERY_ITEMS = [
-    { type: 'video', src: '/galeri/1.mp4', title: 'Aktivitas Apotek Sehatku', desc: 'Pelayanan ramah & profesional apoteker berlisensi.' },
+    { type: 'video', src: '/galeri/1.mp4', poster: '/galeri/1-poster.jpg', title: 'Aktivitas Apotek Sehatku', desc: 'Pelayanan ramah & profesional apoteker berlisensi.' },
     { type: 'image', src: 'https://i.imgur.com/ugvBfzN.jpeg', title: 'Apotek Terpercaya', desc: 'Produk farmasi asli, lengkap & berizin resmi.' },
     { type: 'image', src: 'https://i.imgur.com/HfHQ6in.jpeg', title: 'Suplemen & Vitamin', desc: 'Meningkatkan daya tahan tubuh Anda sekeluarga.' },
     { type: 'image', src: 'https://i.imgur.com/ppaMzvs.jpeg', title: 'Konsultasi Apoteker', desc: 'Tanya obat gratis kapan saja lewat WhatsApp.' }
@@ -258,42 +239,6 @@ export default function App() {
       window.removeEventListener("scroll", handleScroll);
       document.removeEventListener("mousedown", handleOutsideClick);
     };
-  }, []);
-
-  // Periodic simulated live purchase notifications for high trust & social proof
-  useEffect(() => {
-    let index = 0;
-    // Initial delay of 12 seconds before the first popup
-    const startTimeout = setTimeout(() => {
-      setRecentOrder(SIMULATED_ORDERS[index]);
-      setShowOrderNotif(true);
-      
-      const hideTimeout = setTimeout(() => {
-        setShowOrderNotif(false);
-      }, 6500);
-
-      index = (index + 1) % SIMULATED_ORDERS.length;
-
-      const interval = setInterval(() => {
-        setRecentOrder(SIMULATED_ORDERS[index]);
-        setShowOrderNotif(true);
-        
-        const nextHideTimeout = setTimeout(() => {
-          setShowOrderNotif(false);
-        }, 6500);
-
-        index = (index + 1) % SIMULATED_ORDERS.length;
-
-        return () => clearTimeout(nextHideTimeout);
-      }, 26000); // Trigger every 26 seconds
-
-      return () => {
-        clearTimeout(hideTimeout);
-        clearInterval(interval);
-      };
-    }, 12000);
-
-    return () => clearTimeout(startTimeout);
   }, []);
 
   /* ============================================================
@@ -607,12 +552,39 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-0 font-sans">
+      {/* ===== PRODUCT STRUCTURED DATA (SEO Rich Results) ===== */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "ItemList",
+            "itemListElement": FAST_PRODUCTS.map((p, i) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "item": {
+                "@type": "Product",
+                "name": p.name,
+                "image": `https://sehatku.store${p.img}`,
+                "category": p.cat,
+                "offers": {
+                  "@type": "Offer",
+                  "priceCurrency": "IDR",
+                  "price": p.price,
+                  "availability": "https://schema.org/InStock",
+                  "url": "https://sehatku.store/"
+                }
+              }
+            }))
+          })
+        }}
+      />
       {/* ===== HEADER / NAVBAR ===== */}
       <nav className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm backdrop-blur-md bg-white/95">
         <div className="bg-gradient-to-r from-emerald-700 to-teal-600 px-4 py-2 text-center text-xs font-semibold text-white tracking-wide flex flex-col md:flex-row justify-between items-center max-w-7xl mx-auto md:px-8">
           <div className="flex items-center gap-1.5 justify-center md:justify-start">
             <Phone size={13} />
-            <span>0882-0067-29762</span>
+            <span>0882-0062-36471</span>
             <span className="hidden md:inline">|</span>
             <MapPin size={13} className="hidden md:inline" />
             <span className="hidden md:inline">Jawa Tengah</span>
@@ -1306,7 +1278,7 @@ export default function App() {
                 {g.type === "video" ? (
                   <div className="w-full h-full relative flex items-center justify-center bg-black/40">
                     <Video className="absolute text-white/80 w-12 h-12" />
-                    <video src={g.src} className="w-full h-full object-cover opacity-80" muted playsInline />
+                    <video src={g.src} poster={g.poster} preload="none" className="w-full h-full object-cover opacity-80" muted playsInline />
                   </div>
                 ) : (
                   <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
@@ -1570,7 +1542,7 @@ export default function App() {
                 <div className="w-11 h-11 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center flex-shrink-0"><Phone size={20} /></div>
                 <div>
                   <h5 className="font-bold text-sm text-gray-800">WhatsApp Resmi</h5>
-                  <p className="text-xs text-gray-500 leading-normal mt-0.5">0882-0067-29762</p>
+                  <p className="text-xs text-gray-500 leading-normal mt-0.5">0882-0062-36471</p>
                 </div>
               </div>
               <div className="flex gap-4">
@@ -1962,44 +1934,6 @@ export default function App() {
         )}
       </AnimatePresence>
 
-      {/* ===== SIMULATED LIVE PURCHASE FEED (Social Proof CRO) ===== */}
-      <AnimatePresence>
-        {showOrderNotif && recentOrder && (
-          <motion.div
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-24 md:bottom-8 left-4 md:left-8 z-40 bg-white border border-gray-100 p-3.5 rounded-2xl shadow-2xl max-w-xs sm:max-w-sm flex items-center gap-3.5 cursor-pointer hover:border-emerald-300 transition-all"
-            onClick={() => {
-              scrollToSection("products-section");
-              setShowOrderNotif(false);
-            }}
-          >
-            <div className="w-9 h-9 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
-              <ShoppingBag size={18} />
-            </div>
-            <div className="flex-1 pr-3">
-              <span className="text-[8px] bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded-xs font-black uppercase tracking-wider">PESANAN VIA WA</span>
-              <p className="text-xs text-gray-800 font-bold leading-tight mt-1">
-                {recentOrder.name} ({recentOrder.loc})
-              </p>
-              <p className="text-[11px] text-gray-500 mt-0.5">
-                Membeli <span className="font-extrabold text-emerald-600">{recentOrder.item}</span>
-              </p>
-              <span className="text-[9px] text-gray-400 font-medium block mt-0.5">{recentOrder.time}</span>
-            </div>
-            <button 
-              onClick={(e) => {
-                e.stopPropagation();
-                setShowOrderNotif(false);
-              }}
-              className="text-gray-300 hover:text-gray-500 p-1 self-start"
-            >
-              <X size={12} />
-            </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* ===== GLOBAL TOAST NOTIFICATION STYLING ===== */}
       <div className="toast-container" id="toastContainer"></div>
