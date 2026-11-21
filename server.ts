@@ -4,186 +4,121 @@ import fs from "fs";
 import { createServer as createViteServer } from "vite";
 import { GoogleGenAI } from "@google/genai";
 
-// Helper function to fetch and parse a single RSS feed with robust regex
-async function fetchSingleRSS(url: string): Promise<any[]> {
+// ===== Berita kesehatan: hanya dari RSS sumber nyata, tanpa konten buatan AI =====
+type NewsSource = { name: string; url: string };
+
+const NEWS_SOURCES: NewsSource[] = [
+  { name: "Antara News", url: "https://www.antaranews.com/rss/kesehatan.xml" },
+  { name: "detikHealth", url: "https://rss.detik.com/index.php/health" },
+  { name: "Kemenkes RI", url: "https://kemkes.go.id/id/rss/article/rilis-berita" },
+  { name: "Kemenkes RI", url: "https://kemkes.go.id/id/rss/article/tips-kesehatan" },
+];
+const NEWS_TTL_MS = 30 * 60 * 1000; // cache di memori instance
+const NEWS_MAX_AGE_MS = 90 * 24 * 60 * 60 * 1000; // buang berita lebih dari 90 hari
+const NEWS_PER_SOURCE = 6;
+const NEWS_MAX_ITEMS = 12;
+let newsCache: { items: any[]; at: number } | null = null;
+
+const stripCdata = (v: string) => v.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim();
+const decodeEntities = (v: string) =>
+  v.replace(/&nbsp;/g, " ").replace(/&quot;/g, '"').replace(/&#0?39;/g, "'").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&");
+
+function classifyNews(title: string): string {
+  const t = title.toLowerCase();
+  if (/(obat|farmasi|vaksin|resep|bpom)/.test(t)) return "Edukasi Obat";
+  if (/(kulit|skincare|cantik|wajah|jerawat)/.test(t)) return "Skincare";
+  if (/(tips|gizi|diet|makanan|olahraga)/.test(t)) return "Tips Kesehatan Umum";
+  return "Kabar Sehat";
+}
+
+async function fetchSingleRSS(src: NewsSource): Promise<any[]> {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 4000); // 4s timeout per source
+  const timeoutId = setTimeout(() => controller.abort(), 4000);
   try {
-    const response = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
-      },
-      signal: controller.signal
+    const response = await fetch(src.url, {
+      headers: { "User-Agent": "Mozilla/5.0 (compatible; SehatkuBot/1.0; +https://sehatku.store)" },
+      signal: controller.signal,
     });
-
-    if (!response.ok) {
-      return [];
-    }
-
-    const xmlText = await response.text();
+    if (!response.ok) return [];
+    const xml = await response.text();
+    const blocks = xml.match(/<item[^>]*>([\s\S]*?)<\/item>/gi) || [];
     const items: any[] = [];
-    
-    // Support case-insensitive item tags and tags with attributes
-    const itemMatches = xmlText.match(/<item[^>]*>([\s\S]*?)<\/item>/gi) || [];
-    
-    for (const itemXml of itemMatches) {
-      const titleMatch = itemXml.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
-      const linkMatch = itemXml.match(/<link[^>]*>([\s\S]*?)<\/link>/i);
-      const descMatch = itemXml.match(/<description[^>]*>([\s\S]*?)<\/description>/i);
-      const pubDateMatch = itemXml.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i);
-
-      let title = titleMatch ? titleMatch[1] : "";
-      let link = linkMatch ? linkMatch[1] : "";
-      let desc = descMatch ? descMatch[1] : "";
-      let pubDate = pubDateMatch ? pubDateMatch[1] : "";
-
-      // Strip CDATA wrapper if present
-      title = title.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim();
-      link = link.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim();
-      desc = desc.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim();
-      pubDate = pubDate.replace(/<!\[CDATA\[([\s\S]*?)\]\]>/gi, "$1").trim();
-
-      // Clean HTML tags and excessive spaces from description
-      desc = desc.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-
-      // Clean url decoding issues if any
-      link = link.replace(/&amp;/g, "&");
-
-      // Format date beautifully to Indonesian language
-      let formattedDate = pubDate;
-      if (pubDate) {
-        try {
-          const date = new Date(pubDate);
-          if (!isNaN(date.getTime())) {
-            const months = [
-              "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-              "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-            ];
-            formattedDate = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`;
-          }
-        } catch (e) {
-          // ignore date parse errors
-        }
-      }
-
-      if (title && link) {
-        // Classify category automatically based on title keyword content
-        let category = "Kabar Sehat";
-        const titleLower = title.toLowerCase();
-        if (titleLower.includes("obat") || titleLower.includes("farmasi") || titleLower.includes("vaksin") || titleLower.includes("resep")) {
-          category = "Edukasi Obat";
-        } else if (titleLower.includes("kulit") || titleLower.includes("skincare") || titleLower.includes("cantik") || titleLower.includes("wajah") || titleLower.includes("jerawat")) {
-          category = "Skincare";
-        } else if (titleLower.includes("tips") || titleLower.includes("gizi") || titleLower.includes("diet") || titleLower.includes("makanan") || titleLower.includes("olahraga")) {
-          category = "Tips Kesehatan Umum";
-        }
-
-        items.push({
-          type: "web",
-          typeLabel: "Berita Otomatis",
-          icon: "fas fa-newspaper",
-          bg: "linear-gradient(135deg,#10b981,#3b82f6)",
-          category: category,
-          title: title,
-          tanggal: formattedDate || "Baru Saja",
-          desc: desc.length > 150 ? desc.slice(0, 150) + "..." : desc,
-          url: link,
-          btnLabel: "Baca Selengkapnya"
-        });
-      }
+    for (const block of blocks) {
+      const pick = (tag: string) => {
+        const m = block.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
+        return m ? stripCdata(m[1]) : "";
+      };
+      const title = decodeEntities(pick("title"));
+      const link = decodeEntities(pick("link"));
+      const desc = decodeEntities(pick("description").replace(/<[^>]*>/g, " ")).replace(/\s+/g, " ").trim();
+      const date = new Date(pick("pubDate"));
+      // hanya tautan http(s) dan tanggal yang valid
+      if (!title || !/^https?:\/\//i.test(link) || isNaN(date.getTime())) continue;
+      items.push({
+        type: "web",
+        typeLabel: "Berita",
+        sumber: src.name,
+        icon: "fas fa-newspaper",
+        bg: "linear-gradient(135deg,#10b981,#3b82f6)",
+        category: classifyNews(title),
+        title,
+        tanggal: date.toLocaleDateString("id-ID", { day: "numeric", month: "long", year: "numeric", timeZone: "Asia/Jakarta" }),
+        tanggalISO: date.toISOString(),
+        desc: desc.length > 150 ? desc.slice(0, 150) + "..." : desc,
+        url: link,
+        btnLabel: `Baca di ${src.name}`,
+      });
+      if (items.length >= NEWS_PER_SOURCE) break;
     }
-
     return items;
-  } catch (error: any) {
-    // Suppress verbose messages for expected outbound connection timeouts
+  } catch {
     return [];
   } finally {
     clearTimeout(timeoutId);
   }
 }
 
-// Helper function to query multiple Indonesian RSS feeds with instant automatic fallback
-async function fetchHealthNews(): Promise<any[]> {
-  const sources = [
-    "https://www.antaranews.com/rss/kesehatan.xml",
-    "https://rss.detik.com/index.php/health"
-  ];
-
-  for (const src of sources) {
-    const results = await fetchSingleRSS(src);
-    if (results && results.length > 0) {
-      console.log(`Successfully fetched ${results.length} live articles from RSS: ${src}`);
-      return results;
-    }
+// Ambil semua sumber paralel. Jika semua gagal, pakai salinan terakhir yang berhasil (nyata, bukan buatan).
+async function getLiveNews(): Promise<any[]> {
+  if (newsCache && Date.now() - newsCache.at < NEWS_TTL_MS) return newsCache.items;
+  const settled = await Promise.allSettled(NEWS_SOURCES.map(fetchSingleRSS));
+  const all = settled
+    .flatMap((r) => (r.status === "fulfilled" ? r.value : []))
+    .filter((it) => Date.now() - Date.parse(it.tanggalISO) < NEWS_MAX_AGE_MS)
+    .sort((a, b) => b.tanggalISO.localeCompare(a.tanggalISO));
+  const seen = new Set<string>();
+  const items: any[] = [];
+  for (const it of all) {
+    const key = it.title.toLowerCase();
+    if (seen.has(key)) continue;
+    seen.add(key);
+    items.push(it);
+    if (items.length >= NEWS_MAX_ITEMS) break;
   }
-
-  return [];
+  if (items.length > 0) {
+    newsCache = { items, at: Date.now() };
+    return items;
+  }
+  return newsCache ? newsCache.items : [];
 }
 
-// Backup dynamic news generator using Gemini AI API to ensure actual today's news if all external RSS feeds are blocked/offline
-async function generateAINewsWithGemini(): Promise<any[]> {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) return [];
+function mergeArticles(live: any[], curated: any[]): any[] {
+  const seen = new Set<string>();
+  const out: any[] = [];
+  for (const it of [...live, ...curated]) {
+    const key = String(it.title || "").toLowerCase().trim();
+    if (!key || seen.has(key)) continue;
+    seen.add(key);
+    out.push(it);
+  }
+  return out;
+}
 
+async function loadCuratedArticles(): Promise<any[]> {
   try {
-    const ai = new GoogleGenAI({ apiKey });
-    const today = new Date();
-    const months = [
-      "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-      "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-    ];
-    const currentDateStr = `${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
-
-    const prompt = `Hasilkan 4 artikel berita kesehatan terbaru, sangat aktual, penting, dan edukatif dalam bahasa Indonesia untuk tanggal hari ini: ${currentDateStr}.
-Fokus pada info obat-obatan BPOM terbaru, pencegahan penyakit musiman, tips kesehatan harian (gizi, diet, olahraga), atau tips kulit/skincare sehat.
-
-Berikan output dalam bentuk format JSON ARRAY murni (tanpa markdown, tanpa pembungkus \`\`\`json, langsung array JSON saja).
-Masing-masing objek dalam array HARUS memiliki properti berikut:
-- type: "web"
-- typeLabel: "Berita Otomatis"
-- icon: "fas fa-newspaper"
-- bg: warna gradien string CSS menarik, misal "linear-gradient(135deg,#10b981,#3b82f6)" atau "linear-gradient(135deg,#0d9488,#0284c7)"
-- category: pilih salah satu dari ["Kabar Sehat", "Skincare", "Edukasi Obat", "Tips Kesehatan Umum"]
-- title: judul berita yang sangat menarik, berbobot, ilmiah, dan berasa sangat aktual untuk hari ini (${currentDateStr})
-- tanggal: tanggal hari ini yaitu "${currentDateStr}"
-- desc: ringkasan berita 2-3 kalimat yang informatif dan edukatif (panjang 120-150 karakter)
-- url: "#" (atau link edukatif singkat)
-- btnLabel: "Baca Selengkapnya"
-
-Contoh format output:
-[
-  {
-    "type": "web",
-    "typeLabel": "Berita Otomatis",
-    "icon": "fas fa-newspaper",
-    "bg": "linear-gradient(135deg,#10b981,#3b82f6)",
-    "category": "Edukasi Obat",
-    "title": "Kemenkes Terbitkan Panduan Penggunaan Antibiotik yang Benar Guna Cegah Resistensi Kuman",
-    "tanggal": "${currentDateStr}",
-    "desc": "Masyarakat dihimbau untuk selalu berkonsultasi dengan apoteker dalam mengonsumsi obat keras golongan antibiotik agar dosis yang diserap tepat.",
-    "url": "#",
-    "btnLabel": "Baca Selengkapnya"
-  }
-]`;
-
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: prompt,
-      config: {
-        responseMimeType: "application/json"
-      }
-    });
-
-    const text = response.text?.trim() || "";
-    const cleanJson = text.replace(/^```json\s*/i, "").replace(/```$/, "").trim();
-    const items = JSON.parse(cleanJson);
-    if (Array.isArray(items) && items.length > 0) {
-      console.log(`Successfully synthesized ${items.length} dynamic AI health news articles for today (${currentDateStr})`);
-      return items;
-    }
-  } catch (err) {
-    console.warn("Failed to generate AI news fallback:", err);
-  }
+    const localDataPath = path.join(process.cwd(), "public", "data_edukasi.json");
+    if (fs.existsSync(localDataPath)) return JSON.parse(fs.readFileSync(localDataPath, "utf-8"));
+  } catch { /* abaikan */ }
   return [];
 }
 
@@ -207,94 +142,12 @@ async function startServer() {
   // API Route: Gabungkan Berita Kesehatan Otomatis & Edukasi Lokal
   app.get("/api/articles", async (req, res) => {
     try {
-      // 1. Baca data edukasi lokal/kurasi dari file json
-      const localDataPath = path.join(process.cwd(), "public", "data_edukasi.json");
-      let localArticles: any[] = [];
-      if (fs.existsSync(localDataPath)) {
-        const raw = fs.readFileSync(localDataPath, "utf-8");
-        localArticles = JSON.parse(raw);
-      }
-
-      // 1.1 Update tanggal untuk artikel lokal secara dinamis agar situs selalu terasa fresh & updated
-      const today = new Date();
-      const months = [
-        "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-        "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-      ];
-      localArticles = localArticles.map((item, idx) => {
-        const itemDate = new Date(today);
-        // Tunjukkan tanggal mundur berdasarkan indeks untuk variasi rilis berkala harian
-        itemDate.setDate(today.getDate() - idx);
-        
-        let formattedDate = `${itemDate.getDate()} ${months[itemDate.getMonth()]} ${itemDate.getFullYear()}`;
-        if (idx === 0) formattedDate = "Hari Ini";
-        else if (idx === 1) formattedDate = "Kemarin";
-
-        return {
-          ...item,
-          tanggal: formattedDate
-        };
-      });
-
-      // 2. Ambil berita kesehatan live terbaru secara otomatis dari RSS feed
-      let liveNews = await fetchHealthNews();
-
-      // 2.1 Jika RSS feed kosong atau diblokir cloud (biasa terjadi karena limitasi IP crawler),
-      // panggil generator berita bertenaga AI Gemini untuk memproduksi berita kesehatan hari ini secara real-time!
-      if (!liveNews || liveNews.length === 0) {
-        console.log("RSS News is empty or blocked. Initiating dynamic AI News Generator fallback...");
-        liveNews = await generateAINewsWithGemini();
-      }
-
-      // 3. Gabungkan berita live dan berita kurasi lokal secara dinamis
-      // Mencegah duplikasi berdasarkan judul berita
-      const seenTitles = new Set<string>();
-      const mergedArticles: any[] = [];
-
-      // Masukkan berita live terlebih dahulu agar web selalu terasa fresh dan update
-      for (const item of liveNews) {
-        const normTitle = item.title.toLowerCase().trim();
-        if (!seenTitles.has(normTitle)) {
-          seenTitles.add(normTitle);
-          mergedArticles.push(item);
-        }
-      }
-
-      // Masukkan artikel lokal terkurasi
-      for (const item of localArticles) {
-        const normTitle = item.title.toLowerCase().trim();
-        if (!seenTitles.has(normTitle)) {
-          seenTitles.add(normTitle);
-          mergedArticles.push(item);
-        }
-      }
-
-      res.json(mergedArticles);
-    } catch (err: any) {
+      const [live, curated] = await Promise.all([getLiveNews(), loadCuratedArticles()]);
+      res.set("Cache-Control", "public, s-maxage=1800, stale-while-revalidate=86400");
+      res.json(mergeArticles(live, curated));
+    } catch (err) {
       console.error("Error serving aggregated articles:", err);
-      // Fallback anggun: jika terjadi error total, kirimkan data edukasi lokal statis dengan tanggal dinamis
-      try {
-        const localDataPath = path.join(process.cwd(), "public", "data_edukasi.json");
-        if (fs.existsSync(localDataPath)) {
-          const raw = fs.readFileSync(localDataPath, "utf-8");
-          const localArticles = JSON.parse(raw);
-          const today = new Date();
-          const months = [
-            "Januari", "Februari", "Maret", "April", "Mei", "Juni",
-            "Juli", "Agustus", "September", "Oktober", "November", "Desember"
-          ];
-          const dynamicLocal = localArticles.map((item: any, idx: number) => {
-            const itemDate = new Date(today);
-            itemDate.setDate(today.getDate() - idx);
-            let formattedDate = `${itemDate.getDate()} ${months[itemDate.getMonth()]} ${itemDate.getFullYear()}`;
-            if (idx === 0) formattedDate = "Hari Ini";
-            else if (idx === 1) formattedDate = "Kemarin";
-            return { ...item, tanggal: formattedDate };
-          });
-          return res.json(dynamicLocal);
-        }
-      } catch (innerErr) {}
-      res.json([]);
+      res.json(await loadCuratedArticles());
     }
   });
 
