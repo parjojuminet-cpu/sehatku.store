@@ -1,6 +1,0 @@
-{
-  "name": "Sehatku Store",
-  "description": "Platform layanan kesehatan online Jawa Tengah yang menghubungkan Anda dengan apotek resmi berlisensi untuk pemesanan obat via WhatsApp, konsultasi apoteker gratis, asisten AI pintar, dan cek kebutuhan.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
