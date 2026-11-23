@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://sehatku.store/sitemap.xml
